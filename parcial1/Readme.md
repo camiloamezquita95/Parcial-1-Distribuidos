@@ -1,6 +1,10 @@
 Para realizar el aprovisionamiento es necesario a traves de la consola dirigirse a la carpeta que tiene el Vagrantfile, despues de esto se necesita digitar el comando:
 
-vagrant up
+vagrant up centos_database
+
+Despues de haber terminado se procede a digitar el comando:
+
+vagrant up centos_web_flask
 
 Es necesario esperar un poco de tiempo con el fin de que las maquinas queden aprovisionadas.
 
