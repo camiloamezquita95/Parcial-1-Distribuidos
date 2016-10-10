@@ -1,0 +1,37 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+VAGRANTFILE_API_VERSION = "2"
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  config.vm.define :centos_database do |node1|
+    node1.vm.box = "box-cutter/centos67"
+    node1.vm.network :private_network, ip: "192.168.56.102"
+    node1.vm.network "public_network", :bridge => "eth3", ip:"192.168.0.15", :auto_config => "false", :netmask => "255.255.255.0"
+   node1.vm.provider :virtualbox do |vb|
+      vb.customize ["modifyvm", :id, "--memory", "1024","--cpus", "4", "--name", "centos_database" ]
+    end
+    config.vm.provision :chef_solo do |chef1|
+      chef1.version = '12.10.24'
+      chef1.channel = "stable"
+      chef1.cookbooks_path = "cookbooks"
+      #chef.add_recipe "mirror"
+      chef1.add_recipe "postgres"
+      #chef.json ={"aptmirror" => {"server" => "192.168.131.254"}}
+    end
+  end
+  config.vm.define :centos_web_flask do |node|
+    node.vm.box = "box-cutter/centos67"
+    node.vm.network :private_network, ip: "192.168.56.101"
+    node.vm.network "public_network", :bridge => "eth3", ip:"192.168.0.13", :auto_config => "false", :netmask => "255.255.255.0"
+    node.vm.provider :virtualbox do |vb|
+      vb.customize ["modifyvm", :id, "--memory", "1024","--cpus", "4", "--name", "centos_web_flask" ]
+    end
+    config.vm.provision :chef_solo do |chef|
+      chef.version = '12.10.24'
+      chef.channel = "stable"
+      chef.cookbooks_path = "cookbooks"
+      #chef.add_recipe "mirror"
+      chef.add_recipe "flask"
+      #chef.json ={"aptmirror" => {"server" => "192.168.131.254"}}
+    end
+  end
+end
